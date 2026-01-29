@@ -1,44 +1,51 @@
 ---
 name: grabbit
-description: Convert browser interactions into deterministic API workflows with the Grabbit CLI. Use when asked to record browser traffic (HAR), generate workflows from web/API interactions, automate data extraction, or guide users through Grabbit CLI usage including browser control, session handling, and workflow generation.
+description: "Control the Grabbit CLI to record browser interactions (HAR) and generate API workflows. Use this skill when the user wants to: (1) Automate browser actions, (2) Capture web traffic for API analysis, (3) Create deterministic workflows from browsing sessions, or (4) Learn how to use the Grabbit CLI commands."
 ---
 
-# Grabbit
+# Grabbit CLI
 
-Convert browser interactions into deterministic API workflows.
+Master the Grabbit CLI to convert browser interactions into stable API workflows.
 
-## Workflow
+## Core Workflow
 
-Follow this core flow to capture interactions and generate a workflow. Use `--session <name>` to keep recordings isolated.
+1.  **Authenticate**: Ensure you are logged in.
+    ```bash
+    grabbit validate || grabbit auth
+    ```
 
-1. **Auth Check**: Run `grabbit validate`. If it fails, run `grabbit auth`.
-2. **Start Session**: Open a named browser session.
-   ```bash
-   # Headed (for 403s/challenges)
-   grabbit browse --headed --session <name> open <url>
-   # Headless (default)
-   grabbit browse --session <name> open <url>
-   ```
-3. **Interact**: Use `snapshot` to get `@e#` refs for stable interactions.
-   ```bash
-   grabbit browse --session <name> snapshot
-   grabbit browse --session <name> click @e3
-   ```
-4. **Submit**: Generate the workflow with a verbose description.
-   ```bash
-   grabbit save --session <name> "Describe the workflow with concrete examples"
-   ```
-5. **Check Status**: `grabbit check <task-id>`
+2.  **Capture (Session)**: Always use `--session <name>` for isolation.
+    ```bash
+    # 1. Start session & Open URL
+    grabbit browse --headed --session <name> open <url>
 
-## Prompt Guidance (Verbose + Examples)
+    # 2. Inspect & Interact
+    grabbit browse --session <name> snapshot      # Get @e# refs
+    grabbit browse --session <name> click @e1     # Click ref
+    grabbit browse --session <name> fill @e2 "data"
 
-When running `grabbit save`, always include concrete input/output examples in the description to help the backend agent.
+    # 3. Verify
+    grabbit browse --session <name> screenshot
+    ```
 
-- **Bad**: "Extract blog post titles from someblogsite.com."
-- **Good**: "Extract post titles from someblogsite.com, e.g., 'Cooking for Beginners'. Output: { titles: string[] }."
+3.  **Generate**: Submit the capture with a **verbose, example-rich prompt**.
+    ```bash
+    grabbit save --session <name> "Detailed description. Example Input: 'X'. Example Output: { id: '123' }"
+    ```
 
-- **Interactive Example**: "Checkout an item based on its Amazon link. Example flow: open amazon.com/productxyz, add to cart, go to checkout, add address '123 Address Way', add name 'John Doe', choose shipping 'Standard', and place order (stop before final confirm). Output: { order_total, item_title }."
+4.  **Poll**: Wait for the result.
+    ```bash
+    grabbit check <task-id>
+    ```
 
-## Resources
+## Critical Best Practices
 
-- **CLI Reference**: See [cli_reference.md](references/cli_reference.md) for full command list and troubleshooting.
+*   **Headed Mode**: Use `--headed` for sites with bot protection (Cloudflare, 403s) or when visual debugging is needed.
+*   **Snapshots**: Run `snapshot` frequently to get stable `@e#` references (e.g., `@e4`) instead of fragile CSS selectors.
+*   **Prompting**: The backend agent needs **concrete examples** (strings seen on page, JSON shapes) to map HAR requests to workflow steps.
+    *   *Bad*: "Get prices."
+    *   *Good*: "Extract prices. Example: '$19.99'. Output: { price: number }."
+
+## Reference
+
+For the full list of commands (cookies, storage, network, advanced locators), see **[cli_reference.md](references/cli_reference.md)**.

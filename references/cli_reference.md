@@ -1,26 +1,119 @@
 # Grabbit CLI Reference
 
-## Prereqs
-- Ensure CLI is installed globally (npm): `npm i -g @cole-labs/grabbit` with `npm i -g @cole-labs/grabbit-browser`
-- Or run from repo: `cd cli && pnpm dev -- <command>`
-- Verify auth: `grabbit validate` (or `pnpm dev -- validate`)
-- If not authed: `grabbit auth` and enter pairing code
+## Installation
 
-## Browser Commands (Practical Guide)
-Use these in short loops: open → snapshot → interact → snapshot → save.
+```bash
+npm i -g @cole-labs/grabbit
+```
 
-- **Navigation**: `open`, `forward`, `back`, `reload`
-- **Inspect page**: `snapshot` (get @refs), `get text|html|value|attr`, `is visible|enabled|checked`
-- **Interact**: `click`, `dblclick`, `fill`, `type`, `press`, `select`, `hover`, `focus`, `scroll`, `scrollintoview`
-- **Wait**: `wait <ms>` or `wait <selector>` (for UI changes)
-- **Auth/storage**: `cookies get|set|clear`, `storage local|session`
-- **Network**: `network requests [--clear]` (debug what fired)
-- **HAR**: `har start|stop|export|clear` (recording control)
-- **Debug**: `screenshot`, `pdf`, `console`, `errors`
+## Global Flags
 
-Tip: `snapshot` → use `@e#` refs for stable clicks/fills.
+All commands support:
+- `--help`: Show help
+- `--version`: Show version
 
-## Troubleshooting
-- **0 requests**: ensure HAR is recording; reload page.
-- **403/Cloudflare**: use headed and complete challenge (optionally, instruct user to do them), then re‑save.
-- **Auth errors**: rerun `grabbit auth`.
+## Commands
+
+### `auth`
+Authenticate with the Grabbit service. Opens a browser window to pair.
+```bash
+grabbit auth
+```
+- Uses `GRABBIT_API_URL` env var if set (defaults to `https://www.grabbit.dev`).
+
+### `validate`
+Check if the current authentication token is valid.
+```bash
+grabbit validate
+```
+
+### `check`
+Check the status of a submitted workflow generation task.
+```bash
+grabbit check <task-id>
+```
+
+### `save`
+Submit a captured HAR for workflow generation.
+```bash
+grabbit save [options] <prompt>
+```
+**Options:**
+- `--session <name>`: Session to export HAR from (required if not inferred).
+- `--model <id>`: Specific model to use (default: google/gemini-3-flash).
+
+**Example:**
+```bash
+grabbit save --session demo "Extract titles. Example: 'Hello World'. Output: { titles: string[] }"
+```
+
+### `browse`
+Control a browser session for recording interactions.
+```bash
+grabbit browse [flags] <command> [args...]
+```
+
+**Flags:**
+- `--session <name>`: Named session (persistent until closed).
+- `--headed`: Run browser in headed mode (visible).
+- `--profile <path>`: Use custom user data directory.
+- `--proxy <url>`: Use proxy server.
+- `--user-agent <string>`: specific UA.
+
+## Browser Commands
+Usage: `grabbit browse --session <name> <command> [args]`
+
+### Navigation
+- `open <url>`: Navigate to URL. Starts HAR recording automatically.
+- `reload`: Reload current page.
+- `back`: Go back.
+- `forward`: Go forward.
+
+### Inspection
+- `snapshot`: Dump accessibility tree with `@e#` references.
+- `get text <selector>`: Get text content.
+- `get html <selector>`: Get inner HTML.
+- `get value <selector>`: Get input value.
+- `get attr <selector> <name>`: Get attribute value.
+- `is visible <selector>`: Check visibility.
+- `count <selector>`: Count matching elements.
+
+### Interaction
+- `click <selector>`: Click element.
+- `dblclick <selector>`: Double click.
+- `fill <selector> <value>`: Fill input.
+- `type <selector> <text>`: Type text (keystrokes).
+- `press <key>`: Press keyboard key (e.g., Enter, ArrowDown).
+- `check <selector>`: Check checkbox/radio.
+- `uncheck <selector>`: Uncheck.
+- `select <selector> <value>`: Select option.
+- `hover <selector>`: Hover over element.
+- `focus <selector>`: Focus element.
+- `scroll <x> <y>`: Scroll page.
+- `scrollintoview <selector>`: Scroll element into view.
+- `upload <selector> <file...>`: Upload files.
+- `drag <source> <target>`: Drag and drop.
+
+### Locators (Advanced)
+- `getbyrole <role> --name <name>`
+- `getbytext <text>`
+- `getbylabel <label>`
+- `getbyplaceholder <placeholder>`
+
+### State & Debug
+- `cookies get [urls...]`: Get cookies.
+- `cookies set <json>`: Set cookies.
+- `cookies clear`: Clear cookies.
+- `storage get [key]`: Get local/session storage.
+- `storage set <key> <value>`: Set storage.
+- `storage clear`: Clear storage.
+- `screenshot [path]`: Take screenshot.
+- `console`: Dump console logs.
+- `errors`: Dump page errors.
+- `network requests`: List network requests.
+
+### HAR Control
+- `har start`: Start recording.
+- `har stop`: Stop recording.
+- `har export`: Dump HAR JSON.
+- `har clear`: Clear recorded entries.
