@@ -38,10 +38,20 @@ Master the Grabbit CLI to convert browser interactions into stable API workflows
     grabbit check <task-id>
     ```
 
+5.  **Integrate**: Install the workflow as a local skill or use API keys for cURL.
+    ```bash
+    # Install as local agent skill
+    grabbit add <workflow-id>
+
+    # Manage integration keys
+    grabbit keys list
+    ```
+
 ## Critical Best Practices
 
 *   **Headed Mode**: Use `--headed` for sites with bot protection (Cloudflare, 403s) or when visual debugging is needed.
 *   **Snapshots**: Run `snapshot` frequently to get stable `@e#` references (e.g., `@e4`) instead of fragile CSS selectors.
+*   **API Keys**: Use `grabbit keys` to manage tokens for production integrations. Scoped keys are recommended for specific workflows.
 *   **Prompting**: The backend agent needs **concrete examples** (strings seen on page, JSON shapes) to map HAR requests to workflow steps.
     *   *Bad*: "Get prices."
     *   *Good*: "Extract prices. Example: '$19.99'. Output: { price: number }."

@@ -33,6 +33,20 @@ Check the status of a submitted workflow generation task.
 grabbit check <task-id>
 ```
 
+### `add`
+Install a generated workflow as a local skill for AI agents.
+```bash
+grabbit add <workflow-id>
+```
+- Creates a skill definition at `.agents/skills/<name>/SKILL.md`.
+
+### `keys`
+Manage API keys for programmatic integration.
+```bash
+grabbit keys list           # List active keys
+grabbit keys create <name>  # Create a new key
+```
+
 ### `save`
 Submit a captured HAR for workflow generation.
 ```bash
