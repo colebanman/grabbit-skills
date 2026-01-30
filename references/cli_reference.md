@@ -45,6 +45,13 @@ Manage API keys for programmatic integration.
 ```bash
 grabbit keys list           # List active keys
 grabbit keys create <name>  # Create a new key
+grabbit keys show           # Show the current key from local config
+```
+
+### `workflows`
+List saved workflows (title + id + description).
+```bash
+grabbit workflows
 ```
 
 ### `save`

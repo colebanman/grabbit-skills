@@ -14,6 +14,23 @@ Master the Grabbit CLI to convert browser interactions into stable API workflows
     grabbit validate || grabbit auth
     ```
 
+## AI Quickstart (Minimal)
+
+```bash
+# 1) Auth
+grabbit validate || grabbit auth
+
+# 2) List workflows
+grabbit workflows
+
+# 3) Add a workflow as a skill
+grabbit add <workflow-id>
+
+# 4) Export API key for tools/agents
+grabbit keys show
+export GRABBIT_API_KEY="<your-key>"
+```
+
 2.  **Capture (Session)**: Always use `--session <name>` for isolation.
     ```bash
     # 1. Start session & Open URL
@@ -45,6 +62,16 @@ Master the Grabbit CLI to convert browser interactions into stable API workflows
 
     # Manage integration keys
     grabbit keys list
+    grabbit keys show
+    ```
+    Set the API key for tools/agents:
+    ```bash
+    export GRABBIT_API_KEY="<your-key>"
+    ```
+
+6.  **List Workflows**: Find saved workflows (title/id/description).
+    ```bash
+    grabbit workflows
     ```
 
 ## Critical Best Practices
@@ -52,9 +79,17 @@ Master the Grabbit CLI to convert browser interactions into stable API workflows
 *   **Headed Mode**: Use `--headed` for sites with bot protection (Cloudflare, 403s) or when visual debugging is needed.
 *   **Snapshots**: Run `snapshot` frequently to get stable `@e#` references (e.g., `@e4`) instead of fragile CSS selectors.
 *   **API Keys**: Use `grabbit keys` to manage tokens for production integrations. Scoped keys are recommended for specific workflows.
+    *   **Recommended**: Store the key in `GRABBIT_API_KEY` for tools and agents.
 *   **Prompting**: The backend agent needs **concrete examples** (strings seen on page, JSON shapes) to map HAR requests to workflow steps.
     *   *Bad*: "Get prices."
     *   *Good*: "Extract prices. Example: '$19.99'. Output: { price: number }."
+
+## Common Errors
+
+*   **Waitlisted**: Your account is not approved yet. Check the waitlist page or contact support.
+*   **Unauthorized**: Run `grabbit auth`, then retry.
+*   **No active browser session**: Start with `grabbit browse --session <name> open <url>` before `grabbit save`.
+*   **No requests recorded**: Interact with the page, then `grabbit browse --session <name> snapshot`.
 
 ## Reference
 
