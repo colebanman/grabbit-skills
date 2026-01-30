@@ -33,6 +33,12 @@ Check the status of a submitted workflow generation task.
 grabbit check <task-id>
 ```
 
+### `skill`
+Install the Grabbit skill in the current directory.
+```bash
+grabbit skill install
+```
+
 ### `add`
 Install a generated workflow as a local skill for AI agents.
 ```bash

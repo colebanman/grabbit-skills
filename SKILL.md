@@ -23,10 +23,13 @@ grabbit validate || grabbit auth
 # 2) List workflows
 grabbit workflows
 
-# 3) Add a workflow as a skill
+# 3) Install the Grabbit skill in the current directory
+grabbit skill install
+
+# 4) Add a workflow as a skill
 grabbit add <workflow-id>
 
-# 4) Export API key for tools/agents
+# 5) Export API key for tools/agents
 grabbit keys show
 export GRABBIT_API_KEY="<your-key>"
 ```
@@ -59,6 +62,9 @@ export GRABBIT_API_KEY="<your-key>"
     ```bash
     # Install as local agent skill
     grabbit add <workflow-id>
+
+    # Install the Grabbit skill in the current directory (recommended)
+    grabbit skill install
 
     # Manage integration keys
     grabbit keys list
